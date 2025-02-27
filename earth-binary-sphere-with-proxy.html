@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sphère Binaire Métallique</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #000;
+        }
+        canvas {
+            display: block;
+        }
+        .info {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            color: white;
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+            background-color: rgba(0,0,0,0.5);
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .clock {
+            position: absolute;
+            top: 50px;
+            right: 100px;
+            color: #9cf;
+            font-family: 'Courier New', monospace;
+            font-size: 48px;
+            font-weight: bold;
+            text-shadow: 0 0 10px rgba(150, 200, 255, 0.8);
+            z-index: 100;
+            animation: glow-blue 2s infinite alternate;
+        }
+        .date {
+            position: absolute;
+            top: 50px;
+            left: 100px;
+            color: #fea;
+            font-family: 'Courier New', monospace;
+            font-size: 48px;
+            font-weight: bold;
+            text-shadow: 0 0 10px rgba(255, 240, 180, 0.8);
+            z-index: 100;
+            animation: glow-gold 2s infinite alternate;
+        }
+        .quote-container {
+            position: absolute;
+            width: 300px;
+            padding: 15px;
+            border-radius: 10px;
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+            font-family: 'Courier New', monospace;
+            font-size: 21px;
+            z-index: 90;
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+            max-height: 400px;
+            overflow: auto;
+            box-shadow: 0 0 15px rgba(150, 200, 255, 0.4);
+        }
+        .quote-left {
+            left: 150px;
+            top: 50%;
+            transform: translateY(-50%);
+            border-left: 4px solid #9cf;
+        }
+        .quote-right {
+            right: 150px;
+            top: 50%;
+            transform: translateY(-50%);
+            border-right: 4px solid #fea;
+        }
+        .quote-text {
+            margin-bottom: 10px;
+        }
+        .quote-attribution {
+            text-align: right;
+            font-style: italic;
+            color: #9cf;
+        }
+        .quote-attribution.right {
+            color: #fea;
+        }
+        .logo-container {
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-family: 'Courier New', monospace;
+            font-size: 42px;
+            font-weight: bold;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .logo-text {
+            margin-left: 15px;
+        }
+        .blow {
+            color: #9cf;
+            text-shadow: 0 0 10px rgba(150, 200, 255, 0.8);
+            animation: glow-blue 2s infinite alternate;
+        }
+        .coder {
+            color: #fea;
+            text-shadow: 0 0 10px rgba(255, 240, 180, 0.8);
+            animation: glow-gold 2s infinite alternate;
+        }
+        .logo-symbol {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 4px solid #fff;
+            position: relative;
+            animation: rotate 8s linear infinite, pulse 2s ease-in-out infinite alternate;
+        }
+        .logo-symbol:before, .logo-symbol:after {
+            content: "";
+            position: absolute;
+            background: #fff;
+        }
+        .logo-symbol:before {
+            width: 20px;
+            height: 4px;
+            top: 18px;
+            left: 10px;
+            box-shadow: 0 0 8px 2px rgba(150, 200, 255, 0.8);
+        }
+        .logo-symbol:after {
+            width: 4px;
+            height: 16px;
+            top: 12px;
+            left: 18px;
+            box-shadow: 0 0 8px 2px rgba(255, 240, 180, 0.8);
+        }
+        
+        @keyframes glow-blue {
+            0% { text-shadow: 0 0 5px rgba(150, 200, 255, 0.8); }
+            100% { text-shadow: 0 0 20px rgba(150, 200, 255, 1), 0 0 30px rgba(100, 180, 255, 0.8); }
+        }
+        
+        @keyframes glow-gold {
+            0% { text-shadow: 0 0 5px rgba(255, 240, 180, 0.8); }
+            100% { text-shadow: 0 0 20px rgba(255, 240, 180, 1), 0 0 30px rgba(255, 220, 150, 0.8); }
+        }
+        
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 0 5px rgba(255, 255, 255, 0.6); }
+            100% { box-shadow: 0 0 20px rgba(255, 255, 255, 1), 0 0 30px rgba(150, 200, 255, 0.8); }
+        }
+        
+        .status-indicator {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: #f44;
+            transition: background-color 0.5s ease;
+        }
+        .status-indicator.online {
+            background-color: #4f4;
+        }
+        
+        .system-message {
+            color: #f55;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <div class="info"></div>
+    <div class="clock" id="clock">00:00:00</div>
+    <div class="date" id="date">01/01/2025</div>
+    <div class="logo-container">
+        <div class="logo-symbol"></div>
+        <div class="logo-text">
+            <span class="blow">Blow</span><span class="coder">Coder</span>
+        </div>
+    </div>
+    <div id="quote-left" class="quote-container quote-left">
+        <div class="quote-text"></div>
+        <div class="quote-attribution"></div>
+    </div>
+    <div id="quote-right" class="quote-container quote-right">
+        <div class="quote-text"></div>
+        <div class="quote-attribution" class="right"></div>
+    </div>
+    <div id="ollama-status" class="status-indicator"></div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script>
+        // Configuration
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement);
+        
+        // Lumière ambiante renforcée
+        const ambientLight = new THREE.AmbientLight(0x606060, 5.0);
+        scene.add(ambientLight);
+        
+        // Lumière du bas 
+        const bottomLight = new THREE.DirectionalLight(0x88ccff, 1.2);
+        bottomLight.position.set(-1, -1, -0.5);
+        scene.add(bottomLight);
+        
+        // Structure pour stocker l'état des cellules de la grille
+        const gridSize = 32;
+        const gridState = [];
+        
+        // Initialiser l'état de la grille
+        for (let y = 0; y < gridSize; y++) {
+            gridState[y] = [];
+            for (let x = 0; x < gridSize; x++) {
+                gridState[y][x] = {
+                    digit: Math.random() > 0.5 ? '0' : '1',
+                    active: true,
+                    blinkTimer: Math.floor(Math.random() * 50) // Délai aléatoire avant clignotement
+                };
+            }
+        }
+        
+        // Fonction pour créer et mettre à jour la texture binaire
+        function createBinaryTexture() {
+            const size = 1024;
+            const canvas = document.createElement('canvas');
+            canvas.width = size;
+            canvas.height = size;
+            const ctx = canvas.getContext('2d');
+            
+            const texture = new THREE.CanvasTexture(canvas);
+            
+            // Fonction pour mettre à jour la texture
+            function updateTexture() {
+                // Fond noir
+                ctx.fillStyle = 'black';
+                ctx.fillRect(0, 0, size, size);
+                
+                const cellSize = size / gridSize;
+                
+                // Mettre à jour l'état de la grille et dessiner chaque cellule
+                for (let y = 0; y < gridSize; y++) {
+                    for (let x = 0; x < gridSize; x++) {
+                        const cell = gridState[y][x];
+                        
+                        // Gérer le clignotement
+                        if (cell.blinkTimer <= 0) {
+                            // Changer l'état actif
+                            cell.active = !cell.active;
+                            // Réinitialiser le timer avec une durée aléatoire (plus longue)
+                            cell.blinkTimer = Math.floor(Math.random() * 200) + 30;
+                            
+                            // Parfois changer le chiffre (1 chance sur 5)
+                            if (Math.random() < 0.2) {
+                                cell.digit = cell.digit === '0' ? '1' : '0';
+                            }
+                        } else {
+                            // Décrémenter le timer
+                            cell.blinkTimer--;
+                        }
+                        
+                        // Ne dessiner que si la cellule est active
+                        if (cell.active) {
+                            // Couleurs lumineuses comme des étoiles (reprises du code fourni)
+                            if (cell.digit === '0') {
+                                // Bleu-blanc brillant pour les 0
+                                const brightness = 220 + Math.floor(Math.random() * 35);
+                                ctx.fillStyle = `rgb(${brightness-250}, ${brightness}, ${brightness + 50})`;
+                            } else {
+                                // Blanc-jaune brillant pour les 1
+                                const r = 255;
+                                const g = 340 + Math.floor(Math.random() * 15);
+                                const b = 300 + Math.floor(Math.random() * 30);
+                                ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
+                            }
+                            
+                            // Dessiner le chiffre
+                            ctx.font = `bold ${cellSize * 0.7}px monospace`;
+                            ctx.textAlign = 'center';
+                            ctx.textBaseline = 'middle';
+                            
+                            const xPos = x * cellSize + cellSize / 2;
+                            const yPos = y * cellSize + cellSize / 2;
+                            
+                            // Ajouter un halo lumineux autour du chiffre
+                            ctx.shadowColor = cell.digit === '0' ? 'rgba(150, 200, 255, 0.8)' : 'rgba(255, 240, 180, 0.8)';
+                            ctx.shadowBlur = 4;
+                            ctx.fillText(cell.digit, xPos, yPos);
+                            ctx.shadowBlur = 0;
+                        }
+                    }
+                }
+                
+                // Mettre à jour la texture
+                texture.needsUpdate = true;
+            }
+            
+            // Stocker la fonction de mise à jour dans la texture
+            texture.update = updateTexture;
+            
+            // Appliquer la première mise à jour
+            updateTexture();
+            
+            return texture;
+        }
+        
+        // Sphère avec texture binaire
+        const geometry = new THREE.SphereGeometry(5, 64, 64);
+        const binaryTexture = createBinaryTexture();
+        
+        // MatériauX pour la sphère transparente avec chiffres lumineux
+        const material = new THREE.MeshBasicMaterial({
+            map: binaryTexture,
+            transparent: true,
+            opacity: 0.4,
+            side: THREE.DoubleSide
+        });
+        
+        const sphere = new THREE.Mesh(geometry, material);
+        scene.add(sphere);
+        
+        camera.position.z = 13;
+        
+        // Animation
+        function animate() {
+            requestAnimationFrame(animate);
+            
+            // Rotation de la sphère (plus lente)
+            sphere.rotation.y += 0.002;
+            
+            // Mise à jour de la texture
+            binaryTexture.update();
+            
+            renderer.render(scene, camera);
+        }
+        
+        // Redimensionnement
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+        
+        // Démarrer l'animation
+        animate();
+        
+        // Fonction pour mettre à jour l'heure et la date
+        function updateDateTime() {
+            const now = new Date();
+            
+            // Mettre à jour l'heure (format 24h avec secondes)
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+            document.getElementById('clock').textContent = `${hours}:${minutes}:${seconds}`;
+            
+            // Mettre à jour la date
+            const day = String(now.getDate()).padStart(2, '0');
+            const month = String(now.getMonth() + 1).padStart(2, '0'); // Les mois commencent à 0
+            const year = now.getFullYear();
+            document.getElementById('date').textContent = `${day}/${month}/${year}`;
+            
+            // Appeler cette fonction toutes les secondes
+            setTimeout(updateDateTime, 1000);
+        }
+        
+        // Démarrer la mise à jour de l'heure et de la date
+        updateDateTime();
+        
+        // =========== SYSTÈME DE CITATIONS AVEC OLLAMA UNIQUEMENT ===========
+        
+        // Configuration
+        const CONFIG = {
+            apiEndpoint: 'http://127.0.0.1:5000/quote', // API Python locale
+            statusEndpoint: 'http://127.0.0.1:5000/status', // Point de vérification du statut
+            checkInterval: 5000,  // Vérifier la connexion toutes les 5 secondes
+            quoteInterval: 13000,  // Changer de citation toutes les 13 secondes
+            maxStoredQuotes: 50,   // Nombre maximum de citations à stocker
+            minQuotesToDisplay: 1, // Nombre minimum de citations avant de commencer à afficher
+            historySize: 12,       // Nombre de citations récentes à ne pas répéter
+            maxTries: 15           // Nombre maximal d'essais pour trouver une citation non-répétée
+        };
+        
+        // Statut de connexion à l'API
+        let apiConnected = false;
+        const statusIndicator = document.getElementById('ollama-status');
+        
+        // Tableau de citations (uniquement celles générées par Ollama)
+        const quotes = [];
+        
+        // Historique des citations récemment affichées (pour éviter les répétitions)
+        let recentlyShownQuotes = [];
+        
+        let currentSide = 'left';
+        let lastQuoteIndex = -1;
+        let isFirstConnection = true;
+        
+        // Fonction pour obtenir une citation aléatoire sans répétition
+        function getRandomQuote() {
+            if (quotes.length === 0) {
+                return {
+                    text: "En attente de connexion avec Ollama...",
+                    attribution: "Système",
+                    error: true
+                };
+            }
+            
+            // Si on n'a pas beaucoup de citations, on ne peut pas éviter les répétitions
+            if (quotes.length <= CONFIG.historySize) {
+                let randomIndex = Math.floor(Math.random() * quotes.length);
+                lastQuoteIndex = randomIndex;
+                
+                // Ajouter à l'historique quand même pour maintenir la cohérence
+                recentlyShownQuotes.push(randomIndex);
+                if (recentlyShownQuotes.length > CONFIG.historySize) {
+                    recentlyShownQuotes.shift();
+                }
+                
+                return quotes[randomIndex];
+            }
+            
+            // Recherche d'une citation qui n'a pas été récemment affichée
+            let randomIndex;
+            let tries = 0;
+            
+            do {
+                randomIndex = Math.floor(Math.random() * quotes.length);
+                tries++;
+                
+                // Si on n'arrive pas à trouver une citation non-répétée après plusieurs essais, on abandonne
+                if (tries >= CONFIG.maxTries) {
+                    console.log("Impossible de trouver une citation non-répétée après", tries, "essais");
+                    break;
+                }
+            } while (recentlyShownQuotes.includes(randomIndex));
+            
+            // Mettre à jour l'historique
+            recentlyShownQuotes.push(randomIndex);
+            
+            // Si l'historique est trop grand, supprimer les entrées les plus anciennes
+            if (recentlyShownQuotes.length > CONFIG.historySize) {
+                recentlyShownQuotes.shift();
+            }
+            
+            lastQuoteIndex = randomIndex;
+            return quotes[randomIndex];
+        }
+        
+        // Fonction pour vérifier la connexion à l'API
+        function checkApiConnection() {
+            fetch(CONFIG.statusEndpoint)
+            .then(response => {
+                if (response.ok) {
+                    const wasOffline = !apiConnected;
+                    apiConnected = true;
+                    statusIndicator.classList.add('online');
+                    
+                    if (wasOffline || isFirstConnection) {
+                        console.log("Connexion à l'API Python établie!");
+                        isFirstConnection = false;
+                        
+                        // Pré-charger quelques citations au démarrage ou à la reconnexion
+                        for (let i = 0; i < 3; i++) {
+                            setTimeout(() => fetchApiQuote(), i * 1000);
+                        }
+                    }
+                } else {
+                    throw new Error("Réponse API non valide");
+                }
+            })
+            .catch(error => {
+                apiConnected = false;
+                statusIndicator.classList.remove('online');
+                console.log("L'API Python n'est pas disponible:", error);
+            });
+        }
+        
+        // Fonction pour récupérer une citation depuis l'API Python
+        function fetchApiQuote() {
+            // Si l'API n'est pas connectée, ne rien faire
+            if (!apiConnected) {
+                return;
+            }
+            
+            // Récupérer une citation depuis l'API
+            fetch(CONFIG.apiEndpoint)
+            .then(response => response.json())
+            .then(data => {
+                // Vérifier si c'est un message d'erreur
+                if (data.error) {
+                    console.warn("Erreur retournée par l'API:", data.text);
+                    return;
+                }
+                
+                // Vérifier si la citation est un doublon exact (texte identique)
+                const isDuplicate = quotes.some(q => q.text === data.text);
+                if (isDuplicate) {
+                    console.log("Citation dupliquée ignorée:", data.text);
+                    return;
+                }
+                
+                // Ajouter la citation au tableau
+                quotes.push(data);
+                
+                // Limiter le nombre de citations stockées
+                if (quotes.length > CONFIG.maxStoredQuotes) {
+                    // Supprimer la plus ancienne citation qui n'est pas dans l'historique récent
+                    let oldestIndex = 0;
+                    while (recentlyShownQuotes.includes(oldestIndex) && oldestIndex < quotes.length) {
+                        oldestIndex++;
+                    }
+                    
+                    if (oldestIndex < quotes.length) {
+                        // Supprimer cette citation
+                        quotes.splice(oldestIndex, 1);
+                        
+                        // Mettre à jour l'historique (les index ont changé)
+                        for (let i = 0; i < recentlyShownQuotes.length; i++) {
+                            if (recentlyShownQuotes[i] > oldestIndex) {
+                                recentlyShownQuotes[i]--;
+                            }
+                        }
+                    } else {
+                        // Si toutes les citations sont dans l'historique récent, supprimer simplement la plus ancienne
+                        quotes.shift();
+                        
+                        // Mettre à jour tous les index dans l'historique
+                        for (let i = 0; i < recentlyShownQuotes.length; i++) {
+                            recentlyShownQuotes[i]--;
+                        }
+                    }
+                }
+                
+                console.log("Nouvelle citation Ollama ajoutée:", data.text);
+            })
+            .catch(error => {
+                console.error("Erreur lors de la récupération de citation API:", error);
+                apiConnected = false;
+                statusIndicator.classList.remove('online');
+            });
+        }
+        
+        // Fonction pour afficher une citation
+        function displayQuote() {
+            const quote = getRandomQuote();
+            const leftContainer = document.getElementById('quote-left');
+            const rightContainer = document.getElementById('quote-right');
+            
+            // Masquer les deux conteneurs
+            leftContainer.style.opacity = '0';
+            rightContainer.style.opacity = '0';
+            
+            setTimeout(() => {
+                // Mettre à jour le contenu
+                const activeContainer = currentSide === 'left' ? leftContainer : rightContainer;
+                const quoteText = activeContainer.querySelector('.quote-text');
+                const quoteAttribution = activeContainer.querySelector('.quote-attribution');
+                
+                // Afficher le texte de la citation
+                quoteText.textContent = quote.text;
+                quoteAttribution.textContent = quote.attribution;
+                
+                // Ajouter ou supprimer la classe système si c'est un message système
+                if (quote.error) {
+                    quoteText.classList.add('system-message');
+                } else {
+                    quoteText.classList.remove('system-message');
+                }
+                
+                // Afficher le conteneur actif
+                activeContainer.style.opacity = '1';
+                
+                // Alterner le côté pour la prochaine citation
+                currentSide = currentSide === 'left' ? 'right' : 'left';
+                
+                // Obtenir de nouvelles citations si le serveur est connecté
+                if (apiConnected) {
+                    fetchApiQuote();
+                }
+                
+                // Programmer la prochaine citation
+                setTimeout(displayQuote, CONFIG.quoteInterval);
+            }, 1000);
+        }
+        
+        // Initialisation du système de citations
+        function initQuoteSystem() {
+            // Vérifier la connexion API immédiatement et continuer à vérifier périodiquement
+            checkApiConnection();
+            setInterval(checkApiConnection, CONFIG.checkInterval);
+            
+            // Attendre un peu pour laisser le temps aux premières citations d'arriver
+            setTimeout(() => {
+                // Démarrer l'affichage des citations uniquement quand on a au moins 
+                // une citation ou après un délai
+                const startDisplayInterval = setInterval(() => {
+                    if (quotes.length >= CONFIG.minQuotesToDisplay || !apiConnected) {
+                        displayQuote();
+                        clearInterval(startDisplayInterval);
+                    }
+                }, 1000);
+            }, 2000);
+        }
+        
+        // Démarrer le système de citations
+        initQuoteSystem();
+    </script>
+</body>
+</html>

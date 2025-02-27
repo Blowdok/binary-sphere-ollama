@@ -1,0 +1,19 @@
+# Environnement virtuel
+venv/
+env/
+.env/
+
+# Fichiers Python compilés
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Fichiers de configuration IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Fichiers système
+.DS_Store
+Thumbs.db
