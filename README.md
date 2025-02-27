@@ -23,6 +23,10 @@ Une visualisation 3D immersive d'une sphère binaire (0 et 1) avec des citations
 
 1. **Cloner ou télécharger ce dépôt**
 
+   ```bash
+   git clone https://github.com/Blowdok/binary-sphere-ollama.git
+   ```
+   
 ## Installation d'un environnement virtuel Python
 
 Étapes (Terminal/Command Prompt)
