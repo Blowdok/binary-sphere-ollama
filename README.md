@@ -35,20 +35,20 @@ Une visualisation 3D immersive d'une sphère binaire (0 et 1) avec des citations
 
 **Naviguez vers le dossier de votre projet**
 
-   '''bash
+   ```bash
    cd chemin/vers/votre/projet
-   '''
+   ```
 
 **Créer l'environnement virtuel**
 
-   '''bash
+   ```bash
    python -m venv venv
-   '''
+   ```
 **Activer l'environnement virtuel**
 
-   '''bash
+   ```bash
    venv\Scripts\activate
-   '''
+   ```
 
 Une fois activé, vous devriez voir (venv) au début de votre ligne de commande.
 
@@ -60,20 +60,20 @@ deactivate
 
 **Naviguez vers le dossier de votre projet**
 
-   '''bash
+   ```bash
    cd chemin/vers/votre/projet
-   '''
+   ```
 
 **Créer l'environnement virtuel**
 
-   '''bash
+   ```bash
    python3 -m venv venv
-   '''
+   ```
 **Activer l'environnement virtuel**
 
-   '''bash
+   ```bash
    source venv/bin/activate
-   '''
+   ```
 
 Une fois activé, vous devriez voir (venv) au début de votre ligne de commande.
 
