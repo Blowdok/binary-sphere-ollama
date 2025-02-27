@@ -1,4 +1,4 @@
-# Sphère Binaire avec Citations IA générer dynamiquement
+# Sphère Binaire 3D avec Citations IA générer dynamiquement
 
 Une visualisation 3D immersive d'une sphère binaire (0 et 1) avec des citations générées par un modèle de langage Ollama.
 
@@ -53,8 +53,10 @@ Une visualisation 3D immersive d'une sphère binaire (0 et 1) avec des citations
 Une fois activé, vous devriez voir (venv) au début de votre ligne de commande.
 
 **Désactiver l'environnement virtuel (quand vous avez terminé)**
-deactivate
 
+   ```bash
+   deactivate
+   ```
 
 ### Créer un environnement virtuel avec macOS/Linux
 
@@ -78,8 +80,10 @@ deactivate
 Une fois activé, vous devriez voir (venv) au début de votre ligne de commande.
 
 **Désactiver l'environnement virtuel (quand vous avez terminé)**
-deactivate
 
+   ```bash
+   deactivate
+   ```
 
 ## Installer les dépendances Python
 
