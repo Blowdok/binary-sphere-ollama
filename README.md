@@ -2,6 +2,8 @@
 
 Une visualisation 3D immersive d'une sphère binaire (0 et 1) avec des citations générées par un modèle de langage Ollama.
 
+![Capture d'écran de la Sphère Binaire](images/sphere-3d-ollama.png)
+
 ## 🌟 Fonctionnalités
 
 - Sphère 3D interactive avec chiffres binaires lumineux
