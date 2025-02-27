@@ -21,7 +21,7 @@ Une visualisation 3D immersive d'une sphère binaire (0 et 1) avec des citations
 
 ## 🚀 Installation
 
-1. **Cloner ou télécharger ce dépôt**
+   **Cloner ou télécharger ce dépôt**
 
    ```bash
    git clone https://github.com/Blowdok/binary-sphere-ollama.git
@@ -29,43 +29,69 @@ Une visualisation 3D immersive d'une sphère binaire (0 et 1) avec des citations
    
 ## Installation d'un environnement virtuel Python
 
-Étapes (Terminal/Command Prompt)
-1. Créer un environnement virtuel
+   **Étapes (Terminal/Command Prompt)**
 
-Windows:
-## Naviguez vers le dossier de votre projet
-cd chemin/vers/votre/projet
-## Créer l'environnement virtuel
-python -m venv venv
-## Activer l'environnement virtuel
-venv\Scripts\activate
+### Créer un environnement virtuel avec Windows
+
+**Naviguez vers le dossier de votre projet**
+
+   '''bash
+   cd chemin/vers/votre/projet
+   '''
+
+**Créer l'environnement virtuel**
+
+   '''bash
+   python -m venv venv
+   '''
+**Activer l'environnement virtuel**
+
+   '''bash
+   venv\Scripts\activate
+   '''
 
 Une fois activé, vous devriez voir (venv) au début de votre ligne de commande.
-## Désactiver l'environnement virtuel (quand vous avez terminé)
+
+**Désactiver l'environnement virtuel (quand vous avez terminé)**
 deactivate
 
-macOS/Linux:
-## Naviguez vers le dossier de votre projet
-cd chemin/vers/votre/projet
-## Créer l'environnement virtuel
-python3 -m venv venv
-## Activer l'environnement virtuel
-source venv/bin/activate
+
+### Créer un environnement virtuel avec macOS/Linux
+
+**Naviguez vers le dossier de votre projet**
+
+   '''bash
+   cd chemin/vers/votre/projet
+   '''
+
+**Créer l'environnement virtuel**
+
+   '''bash
+   python3 -m venv venv
+   '''
+**Activer l'environnement virtuel**
+
+   '''bash
+   source venv/bin/activate
+   '''
+
 Une fois activé, vous devriez voir (venv) au début de votre ligne de commande.
-## Désactiver l'environnement virtuel (quand vous avez terminé)
+
+**Désactiver l'environnement virtuel (quand vous avez terminé)**
 deactivate
 
-2. **Installer les dépendances Python**
+
+## Installer les dépendances Python
 
    ```bash
    pip install -r requirements.txt
    ```
 
-3. **Assurez-vous qu'Ollama est installé**
+**Assurez-vous qu'Ollama est installé**
    
    Suivez les instructions sur [https://ollama.ai/]
 
-4. **Vérifiez que votre modèle Ollama est disponible**
+**Vérifiez que votre modèle Ollama est disponible**
 
    ```bash
    ollama list
@@ -79,16 +105,16 @@ deactivate
 
 ## 🔧 Configuration
 
-Avant de démarrer, vous pouvez ajuster les paramètres dans les fichiers:
+Avant de démarrer, vous pouvez ajuster les paramètres (ou personnaliser) dans les fichiers:
 
 ### Serveur Python (quote-server.py)
 
-- Modifiez le nom du modèle Ollama si nécessaire (ligne 15)
+- Modifiez le nom du modèle Ollama si nécessaire
 - Ajustez les options de génération (température, etc.)
 
 ### Interface HTML (earth-binary-sphere-with-proxy.html)
 
-Vous pouvez modifier les paramètres de configuration dans l'objet `CONFIG` (vers la ligne 420):
+Vous pouvez modifier les paramètres de configuration dans l'objet `CONFIG`:
 
 ```javascript
 const CONFIG = {
@@ -122,12 +148,13 @@ const CONFIG = {
    - Le point vert en bas à droite indique que la connexion avec Ollama est établie
    - Les citations alternent entre les deux côtés de l'écran
    - La sphère binaire tourne lentement avec des chiffres qui clignotent
+   - Personnaliser comme vous le voulez
 
 ## 📁 Structure des fichiers
 
-- **quote-server.py** - Serveur Python qui communique avec Ollama et expose une API REST
-- **earth-binary-sphere-with-proxy.html** - Interface web avec la sphère 3D et l'affichage des citations
-- **requirements.txt** - Dépendances Python nécessaires
+- **quote-server.py** : Serveur Python qui communique avec Ollama et expose une API REST
+- **earth-binary-sphere-with-proxy.html** : Interface web avec la sphère 3D et l'affichage heure, date et des citations
+- **requirements.txt** : Dépendances Python nécessaires
 
 ## 🔍 Fonctionnement
 
@@ -144,20 +171,17 @@ Le système garde en mémoire les 12 dernières citations affichées et évite d
 ## 📱 Compatibilité
 
 - ✅ Desktop (Chrome, Firefox, Safari, Edge)
-- ✅ Mobile (versions récentes des navigateurs)
 - ❌ Internet Explorer (non supporté)
 
 ## 📝 Licence
 
-Ce projet est distribué sous licence MIT. Voir le fichier LICENSE pour plus de détails.
+Ce projet est distribué sous la licence MIT. Voir le fichier [LICENSE](LICENSE) pour plus d'informations.
 
 ## 🙏 Crédits
 
-- Three.js pour le rendu 3D
-- Ollama pour la génération de texte
+- Ollama pour la génération de texte by prompt Blowdok
 - Flask et Flask-CORS pour l'API Python
 
 ---
 
-Créé avec ❤️ par Blowdok alias BlowCoder
-"# binary-sphere-ollama" 
+Créé avec ❤️ par Blowdok alias BlowCoder 
